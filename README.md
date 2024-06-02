@@ -54,6 +54,32 @@ The script will:
 5. Update your local Wireguard configuration with the new keys and endpoint.
 6. Restart the Wireguard service to apply the changes.
 
+## Security Benefits
+
+Regularly rotating your Wireguard keys improves security by:
+
+1. Minimizing Exposure: Regular key rotation reduces the window of opportunity for potential attackers to exploit compromised keys.
+2. Enhancing Anonymity: Changing IP addresses and endpoints frequently helps in maintaining anonymity by making it more difficult to track online activities.
+3. Compliance: Some security policies and compliance frameworks recommend or require regular key rotations as part of best practices for maintaining secure communications.
+
+## Recommended Usage
+
+To maximize security, it is recommended to run this script on a regular basis. You can automate this process using a cron job to ensure your Wireguard keys are rotated daily. To set up a daily cron job, you can use the following steps:
+
+1. Open the crontab file for editing:
+
+```bash
+crontab -e
+```
+
+2. Add the following line to schedule the script to run at boot:
+
+```bash
+@reboot /path/to/rotate.sh
+```
+
+Replace `/path/to/rotate.sh` with the actual path to the `rotate.sh` script.
+
 ## Troubleshooting
 
 - Ensure the account number file is correctly formatted and located at location specified
