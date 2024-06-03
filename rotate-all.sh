@@ -91,7 +91,10 @@ if ! printf '%s\n' "$IPS" | grep -E '^[0-9a-f:/.,]+$' >/dev/null; then
     echo "[+] Response: $IPS"
     exit 1
 fi
-echo "[+] New Wireguard IPs are $IPS"
+
+# Extract only the IPv4 address
+NEW_IPV4=$(echo "$IPS" | awk -F',' '{print $1}')
+echo "[+] New Wireguard IPv4 is $NEW_IPV4"
 
 # Get device name using the new public key
 echo "[+] Getting device name using the new public key"
@@ -141,17 +144,17 @@ cp "$CONFIG" "$BACKUP_CONFIG"
 # Update Wireguard config
 echo "[+] Updating Wireguard config $CONFIG"
 ESCAPED_PRIVATE_KEY="$(escape "$NEW_PRIVATE_KEY")"
-ESCAPED_IPS="$(escape "$IPS")"
+ESCAPED_IPV4="$(escape "$NEW_IPV4")"
 ESCAPED_DEVICE_NAME="$(escape "$DEVICE_NAME")"
 ESCAPED_WG_IP="$(escape "$NEW_WG_IP")"
 ESCAPED_WG_PUBLIC_KEY="$(escape "$NEW_WG_PUBLIC_KEY")"
 sed -i -r "s/^# Device: .*/# Device: $ESCAPED_DEVICE_NAME/" "$CONFIG"
 sed -i -r "s/^PrivateKey\s*=\s*.*$/PrivateKey = $ESCAPED_PRIVATE_KEY/" "$CONFIG"
-sed -i -r "s/^Address\s*=\s*.*$/Address = $ESCAPED_IPS/" "$CONFIG"
+sed -i -r "s/^Address\s*=\s*.*$/Address = $ESCAPED_IPV4/" "$CONFIG"
 sed -i -r "s/^Endpoint\s*=\s*.*$/Endpoint = $ESCAPED_WG_IP:51820/" "$CONFIG"
 sed -i -r "s/^PublicKey\s*=\s*.*$/PublicKey = $ESCAPED_WG_PUBLIC_KEY/" "$CONFIG"
 
-# Optionally: Revoke old key
+# Revoke old key
 echo "[+] Revoking old key"
 curl -s -H "Content-Type: application/json" \
         -H "Authorization: Bearer $AUTH_TOKEN" \
@@ -163,7 +166,7 @@ echo "[+] Waiting for changes to propagate..."
 sleep 5
 if systemctl is-active --quiet wg-quick@wg0; then
     echo "[+] Wireguard is running, restarting Wireguard"
-    # systemctl restart wg-quick@wg0
+    systemctl restart wg-quick@wg0
 else
     echo "[+] Wireguard is not running, no need to restart"
 fi
