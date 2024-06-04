@@ -33,16 +33,10 @@ git clone https://github.com/okbenito/mullvad-wireguard-rotation.git
 cd mullvad-wireguard-rotation
 ```
 
-2. Make the script executable:
+2. Run the script:
 
 ```bash
-chmod +x rotate.sh
-```
-
-3. Run the script:
-
-```bash
-./rotate.sh
+/bin/bash /path/to/rotate.sh
 ```
 
 The script will:
@@ -75,7 +69,7 @@ crontab -e
 2. Add the following line to schedule the script to run at boot:
 
 ```bash
-@reboot /path/to/rotate.sh
+@reboot /bin/bash /path/to/rotate.sh
 ```
 
 Replace `/path/to/rotate.sh` with the actual path to the `rotate.sh` script.
