@@ -20,9 +20,9 @@ sudo apt-get install -y curl wireguard jq
 
 # Setup
 
-1. Save your Mullvad account number in a file and update the ACCOUNT_FILE variable.
+1. Save your Mullvad account number in a file and update the ACCOUNT_FILE variable. The file should contain only your 16-digit Mullvad account number, without any extra spaces or newlines.
 
-2. The file should contain only your 16-digit Mullvad account number, without any extra spaces or newlines.
+2. Generate the starting wireguard key in your Mullvad account using their wireGuard configuration file generator. Download and use any of their wireguard relays. You only need to do this once, then the script will update it going forward.
 
 # Usage
 
